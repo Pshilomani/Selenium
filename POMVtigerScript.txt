@@ -1,0 +1,341 @@
+package POM;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class Loginage {
+
+   public WebDriver driver;
+	// WebElement a = driver.findElement(By.name("user_name"));
+
+	@FindBy(name = "user_name")
+
+	private WebElement usernametf;
+
+	@FindBy(name = "user_password")
+
+	private WebElement userpasstf;
+
+	@FindBy(id = "submitButton")
+
+	private WebElement userlogintf;
+	
+
+	public WebElement getUsernametf() 
+	{
+		return usernametf;
+	}
+
+	public WebElement getUserpasstf()
+	{
+		return userpasstf;
+	}
+
+	public WebElement getUserlogintf()
+	{
+		return userlogintf;
+	}
+
+	//create parameterized  constructor
+	public Loginage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+		
+	}
+
+	//create a method
+	public HomePage Login(String usernamedata , String passworddata) 
+	{
+		usernametf.sendKeys("admin");
+		userpasstf.sendKeys("admin");
+		userlogintf.click();
+		return new HomePage(driver);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+package POM;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class HomePage {
+
+	public WebDriver driver;
+	
+	@FindBy(xpath="//a[text()='Contacts']")	
+	
+	private WebElement contactele;
+
+	public WebElement getContactele() {
+		return contactele;
+	}
+	  //constructor
+		public HomePage(WebDriver driver)
+		{
+			PageFactory.initElements(driver,this);
+
+	    }
+       //method
+		public ContcatPage Home() 
+		{
+			contactele.click();
+			return new ContcatPage(driver);
+		}
+	
+       
+	}
+
+
+
+
+
+
+
+
+
+
+package POM;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class ContcatPage {
+	
+	
+	@FindBy(xpath="//img[@alt='Create Contact...']")
+	
+	private WebElement plusicon;
+
+	public WebElement getPlusicon() {
+		return plusicon;
+	}
+
+	public ContcatPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+package POM;
+
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+public class ContactInformation {
+	
+	@FindBy(name="firstname")
+	private WebElement usernm ;
+	
+	@FindBy(name="lastname")
+	
+    private WebElement userln ;
+    
+    @FindBy(xpath="(//input[@name='assigntype'])[2]")
+    private WebElement assignt;
+    
+    public WebElement getUsernm() {
+		return usernm;
+	}
+
+	public WebElement getUserln() {
+		return userln;
+	}
+
+	public WebElement getAssignt() {
+		return assignt;
+	}
+
+	public WebElement getGroupdropdown() {
+		return groupdropdown;
+	}
+
+	public WebElement getOrgname() {
+		return orgname;
+	}
+
+	public WebElement getSearchtext() {
+		return searchtext;
+	}
+
+	public WebElement getSearchele() {
+		return searchele;
+	}
+
+	public WebElement getFindpune() {
+		return findpune;
+	}
+
+	public WebElement getBirthDate() {
+		return birthDate;
+	}
+
+	public WebElement getSavbutton() {
+		return savbutton;
+	}
+
+	@FindBy(name ="assigned_group_id")
+    private WebElement groupdropdown;
+    
+    @FindBy(xpath = "(//img[@src='themes/softed/images/select.gif'])[1]")
+    private WebElement orgname;
+    
+    @FindBy(id="search_txt")
+    private WebElement searchtext;
+    
+    @FindBy(name = "search")
+    private WebElement searchele;
+    
+    @FindBy(xpath=("//a[text()='Pune8']"))
+    private WebElement findpune;  
+    
+    @FindBy(id="jscal_field_birthday")
+    private WebElement birthDate;
+    
+	@FindBy(name="button")
+    private WebElement savbutton;
+ 
+
+  	 
+	 
+      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package BasicPom;
+
+import java.io.IOException;
+import java.time.Duration;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
+import CommonUtils.WebDriverUtil;
+import POM.ContactInformation;
+import POM.ContcatPage;
+import POM.HomePage;
+import POM.Loginage;
+
+public class BasePage {
+	
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		
+		WebDriverUtil wutils = new WebDriverUtil();
+		
+		WebDriver driver = new ChromeDriver();
+			
+		driver.manage().window().maximize();
+		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		
+		driver.get("http://localhost:8888");
+		
+		Loginage lp = new Loginage(driver);
+		lp.Login("admin","admin");
+		
+		HomePage hp = new HomePage(driver);
+		
+		hp.Home();
+		
+		ContcatPage cp = new ContcatPage(driver);
+		
+		cp.getPlusicon().click();
+		
+		ContactInformation cinfo = new ContactInformation();
+		
+		PageFactory.initElements(driver, cinfo);
+		cinfo.getUsernm().sendKeys("pooja");
+		cinfo.getUserln().sendKeys("shilomani");
+		
+	    cinfo.getAssignt().click();
+	    
+	    wutils.handledropdown(cinfo.getGroupdropdown(),"Support Group");
+	    
+		cinfo.getOrgname().click();
+		
+		wutils.Switch(driver,"http://localhost:8888/index.php?module=Accounts&action=Popup&popuptype=specific_contact_account_address&form=TasksEditView&form_submit=false&fromlink=&recordid=");
+         
+		cinfo.getSearchtext().sendKeys("Pune8");
+		
+        cinfo.getSearchele().click();
+         
+         cinfo.getFindpune().click(); 
+         
+         wutils.Switch(driver, "http://localhost:8888/index.php?module=Contacts&action=EditView&return_action=DetailView&parenttab=Marketing");
+         
+         cinfo.getBirthDate().sendKeys("2024-01-2");
+                  
+         cinfo.getSavbutton().click();
+         
+         wutils.TakesScreenshot(driver);
+
+      /*  LogOutPage lop = new LogOutPage();
+        
+       // wutils.mousehover(driver, null)
+
+        PageFactory.initElements(driver, lop);
+        WebElement adminicon = lop.getAdminicon();
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(adminicon).perform();
+
+        lop.getSignoutbut(); */
+
+	}
+}
